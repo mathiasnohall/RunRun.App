@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "RunRun.App",
-    "slug": "RunRun.App",
-    "version": "1.0.0",
+    "name": "RunRun",
+    "slug": "RunRun",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "runrun.app"
     },
     "android": {
       "adaptiveIcon": {
