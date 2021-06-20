@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from 'react-native';
 import background from './assets/background.png';
 import logo from './assets/logo.png';
 
@@ -9,31 +9,38 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <ImageBackground source={background} style={styles.image}>        
-        <Image source={logo} />
-        <Pressable onPress={onPressStart}>
-          <Text style={styles.button}>Start running</Text>
-        </Pressable>
+      <ImageBackground source={background} style={styles.container}> 
+        <View>
+          <Image source={logo} style={styles.logo}/>
+          <Pressable onPress={onPressStart}>
+            <Text style={styles.button}>Start running</Text>
+          </Pressable>
+        </View>
       </ImageBackground>
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    resizeMode: "cover",
     flexDirection: "column",
-    textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: "cover",
+  logo:{
+    width: 305,
+    height: 250,
+    marginBottom: 150,
+    justifyContent: "center"
   },
   button:{
-    color:'red',    
+    textAlign: 'center',
+    color:'#fff',    
+    padding: 20,
+    margin: 20,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#fff',
   }
 });
