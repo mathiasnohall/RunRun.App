@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from 'react-native';
-import background from './assets/background.png';
-import logo from './assets/logo.png';
 import sv from './lang/sv.json';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -17,9 +15,9 @@ export default function App() {
 
   return (
     <IntlProvider messages={sv} locale="sv-SE">
-      <ImageBackground source={{ uri: background }} style={styles.container}> 
+      <ImageBackground source={require('./assets/background.png')} style={styles.container}> 
         <View>
-          <Image source={{uri: logo }} style={styles.logo}/>
+          <Image source={require('./assets/logo.png')} style={styles.logo}/>
           <Pressable 
             onPress={onPressStart}
             style={styles.button}
