@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from 'react-native';
@@ -18,9 +17,9 @@ export default function App() {
 
   return (
     <IntlProvider messages={sv} locale="sv-SE">
-      <ImageBackground source={background} style={styles.container}> 
+      <ImageBackground source={{ uri: background }} style={styles.container}> 
         <View>
-          <Image source={logo} style={styles.logo}/>
+          <Image source={{uri: logo }} style={styles.logo}/>
           <Pressable 
             onPress={onPressStart}
             style={styles.button}
