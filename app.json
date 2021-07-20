@@ -31,7 +31,10 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.runruntarget.app"
+      "bundleIdentifier": "com.runruntarget.app",
+      "infoPlist": {
+        "NSBluetoothPeripheralUsageDescription": "This app uses bluetooth to control the RunRun Bluetooth device."
+      }
     },
     "android": {
       "adaptiveIcon": {
