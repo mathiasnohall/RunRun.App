@@ -2,7 +2,7 @@
   "expo": {
     "name": "RunRun",
     "slug": "RunRun",
-    "version": "0.3.4",
+    "version": "0.3.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -21,7 +21,8 @@
           ],
           "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
         }
-      ]
+      ],
+      ["./customplugin"]
     ],
     "updates": {
       "fallbackToCacheTimeout": 0
