@@ -1,58 +1,83 @@
-import React, { useEffect, useState } from "react"
-import { FormattedMessage, IntlProvider } from "react-intl"
-import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
-import sv from "./lang/sv.json"
-import { Ionicons, FontAwesome } from "@expo/vector-icons"
-import { BleManager, Device } from "react-native-ble-plx"
+import React, { useEffect, useState } from "react";
+import { FormattedMessage, IntlProvider } from "react-intl";
+import {
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+} from "react-native";
+import sv from "./lang/sv.json";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { BleManager, State } from "react-native-ble-plx";
 
 export default function App() {
-  const [running, setRunning] = useState<boolean>(false)
-  const [connected, setConnected] = useState<boolean>(false)
+  const [running, setRunning] = useState<boolean>(false);
+  const [connected, setConnected] = useState<boolean>(false);
 
   useEffect(() => {
-    /*    try {
+    if (!connected) {
       const manager = new BleManager();
-      manager.startDeviceScan(
-        null,
-        { allowDuplicates: true },
-        (error, device) => {
-          if (error) {
-            console.log(error);
-            return;
+      manager.onStateChange((state) => {
+        const subscription = manager.onStateChange((state) => {
+          if (state === State.PoweredOn) {
+            manager.startDeviceScan(
+              null,
+              { allowDuplicates: false },
+              (error, device) => {
+                if (error) {
+                  console.log(error);
+                  return;
+                }
+                console.log(device?.localName);
+                if (
+                  device != null &&
+                  device.localName === "Adafruit Bluefruit LE"
+                ) {
+                  manager.stopDeviceScan();
+
+                  device.onDisconnected(() => {
+                    console.log("disconnected");
+                    setConnected(false);
+                  });
+
+                  console.log("connecting to: " + device.localName);                  
+                  device.connect()
+                    .then((device) => {
+                      device.discoverAllServicesAndCharacteristics();
+                      return device;
+                    })
+                    .then((device) => {
+                      console.log("connected!");
+                      setConnected(true);
+                      // Do work on device with services and characteristics
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                      // Handle errors
+                    });
+                }
+              }
+            );
+            subscription.remove();
           }
-          console.log(device?.localName);
-          if (device != null && device.localName === "Adafruit Bluefruit LE") {
-            manager.stopDeviceScan();
-            device
-              .connect()
-              .then((device) => {
-                setConnected(true);
-                return device.discoverAllServicesAndCharacteristics();
-              })
-              .then((device) => {
-                // Do work on device with services and characteristics
-              })
-              .catch((error) => {
-                // Handle errors
-              });
-          }
-        }
-      );
-    } catch {
-      setConnected(true);
-    }*/
-    setTimeout(() => {
-      setConnected(true)
-    }, 2000)
-  })
+        }, true);
+        return () => subscription.remove();
+      });
+    }
+  }, [connected, setConnected]);
 
   const onPressStart = () => {
-    setRunning(!running)
-  }
+    setRunning(!running);
+  };
 
   return (
     <IntlProvider messages={sv} locale="sv-SE">
-      <ImageBackground source={require("./assets/background.png")} style={styles.container}>
+      <ImageBackground
+        source={require("./assets/background.png")}
+        style={styles.container}
+      >
         <View>
           <Image source={require("./assets/logo.png")} style={styles.logo} />
           <Pressable onPress={onPressStart} style={styles.button}>
@@ -62,7 +87,12 @@ export default function App() {
                   <Text style={styles.text}>
                     <FormattedMessage id="connecting" />
                   </Text>
-                  <FontAwesome style={styles.icon} name="spinner" size={22} color="white" />
+                  <FontAwesome
+                    style={styles.icon}
+                    name="spinner"
+                    size={22}
+                    color="white"
+                  />
                 </>
               )}
               {connected && !running && (
@@ -70,7 +100,12 @@ export default function App() {
                   <Text style={styles.text}>
                     <FormattedMessage id="start" />
                   </Text>
-                  <Ionicons style={styles.icon} name="play-outline" size={22} color="white" />
+                  <Ionicons
+                    style={styles.icon}
+                    name="play-outline"
+                    size={22}
+                    color="white"
+                  />
                 </>
               )}
               {connected && running && (
@@ -78,7 +113,12 @@ export default function App() {
                   <Text style={styles.text}>
                     <FormattedMessage id="stop" />
                   </Text>
-                  <Ionicons style={styles.icon} name="stop-outline" size={22} color="white" />
+                  <Ionicons
+                    style={styles.icon}
+                    name="stop-outline"
+                    size={22}
+                    color="white"
+                  />
                 </>
               )}
             </View>
@@ -86,7 +126,7 @@ export default function App() {
         </View>
       </ImageBackground>
     </IntlProvider>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -122,4 +162,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   icon: {},
-})
+});
