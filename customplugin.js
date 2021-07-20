@@ -1,6 +1,17 @@
-module.exports = function withCustomName(config, name) {
-  // Modify the config
-  config.ios.infoPlist['NSBluetoothPeripheralUsageDescription'] = "used to start and stop en run run device";
-  // Return the results
+const withMySDK = (config, { apiKey }) => {
+  // Ensure the objects exist
+  if (!config.ios) {
+    config.ios = {};
+  }
+  if (!config.ios.infoPlist) {
+    config.ios.infoPlist = {};
+  }
+
+  // Append the apiKey
+  config.ios.infoPlist['NSBluetoothPeripheralUsageDescription'] = apiKey;
+
   return config;
 };
+
+/// Use the plugin
+export default withMySDK(config, { apiKey: 'Used to control the run run bluetooth device' });
