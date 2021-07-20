@@ -3,12 +3,44 @@ import { FormattedMessage, IntlProvider } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
 import sv from "./lang/sv.json"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
+import { BleManager, Device } from "react-native-ble-plx"
 
 export default function App() {
   const [running, setRunning] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
 
   useEffect(() => {
+    /*    try {
+      const manager = new BleManager();
+      manager.startDeviceScan(
+        null,
+        { allowDuplicates: true },
+        (error, device) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          console.log(device?.localName);
+          if (device != null && device.localName === "Adafruit Bluefruit LE") {
+            manager.stopDeviceScan();
+            device
+              .connect()
+              .then((device) => {
+                setConnected(true);
+                return device.discoverAllServicesAndCharacteristics();
+              })
+              .then((device) => {
+                // Do work on device with services and characteristics
+              })
+              .catch((error) => {
+                // Handle errors
+              });
+          }
+        }
+      );
+    } catch {
+      setConnected(true);
+    }*/
     setTimeout(() => {
       setConnected(true)
     }, 2000)
