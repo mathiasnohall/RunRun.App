@@ -2,27 +2,30 @@ import React, { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
-import { BleManager, Device, State } from "react-native-ble-plx"
+import { BleManager, Device, State, Characteristic, Service, Descriptor } from "react-native-ble-plx"
 
 export default function Home() {
   const [running, setRunning] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
 
+  let _manager : BleManager
+  let _device : Device
+
   useEffect(() => {
     if (!connected) {
       try {
-        const manager = new BleManager()
-        manager.onStateChange((state) => {
-          const subscription = manager.onStateChange((state) => {
+        _manager = new BleManager()
+        _manager.onStateChange((state) => {
+          const subscription = _manager.onStateChange((state) => {
             if (state === State.PoweredOn) {
-              manager.startDeviceScan(null, { allowDuplicates: false }, (error, device) => {
+              _manager.startDeviceScan(null, { allowDuplicates: false }, (error, device) => {
                 if (error) {
                   console.log(error)
                   return
                 }
                 console.log(device?.localName)
                 if (device != null && device.localName === "Adafruit Bluefruit LE") {
-                  manager.stopDeviceScan()
+                  _manager.stopDeviceScan()
 
                   device.onDisconnected(() => {
                     console.log("disconnected")
@@ -33,11 +36,11 @@ export default function Home() {
                   device
                     .connect()
                     .then((device) => {
-                      device.discoverAllServicesAndCharacteristics()
-                      return device
+                      return device.discoverAllServicesAndCharacteristics()
                     })
                     .then((device) => {
                       console.log("connected!")
+                      _device = device
                       setConnected(true)
                       // Do work on device with services and characteristics
                     })
@@ -52,7 +55,7 @@ export default function Home() {
           }, true)
           return () => {
             subscription.remove()
-            manager.destroy()
+            _manager.destroy()
           }
         })
       } catch {}
@@ -63,7 +66,10 @@ export default function Home() {
     if (!connected) {
       return
     }
-    setRunning(!running)
+    _device.isConnected()
+      .then(() => setRunning(!running))
+    console.log(_device)
+    
   }
 
   return (
