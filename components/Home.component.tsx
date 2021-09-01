@@ -20,7 +20,6 @@ export default function Home() {
     const newCharacteristics = await service.characteristics()
     setCharacteristics(newCharacteristics)
     newCharacteristics.forEach(async (characteristic) => {
-      console.log("characteristic uuid: " + characteristic.uuid)
       const newDescriptors = await characteristic.descriptors()
       setDescriptors((prev) => [...new Set([...prev, ...newDescriptors])])
     })
@@ -40,7 +39,10 @@ export default function Home() {
     console.log("connected to " + device.localName)
     discoveredServices.forEach(async (service) => {
       console.log("service uuid:" + service.uuid)
-      await getCharacteristics(service)
+      if(service.uuid === "6e400001-b5a3-f393-e0a9-e50e24dcca9e")
+      {
+        await getCharacteristics(service)
+      }
     })
     console.log("done")
   }
@@ -70,20 +72,31 @@ export default function Home() {
     }
   }, [connected, setConnected])
 
+
+  const getInputValue = () => {
+    if(running){
+      return "stop"
+    }
+    return "start";
+  }
+
   const onPressStart = () => {
     if (!connected) {
       return
     }
-    setRunning(!running)
+    console.log(getInputValue())
+    
     _manager.writeCharacteristicWithResponseForDevice(
       _device.id,
-      services[0].uuid,
-      characteristics[0].uuid,
-      Base64.encode("start"),
+      "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+      "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+      Base64.encode(getInputValue()),
       "5eedbf05-52f0-40ed-8f22-14e818501dd8"
     )
-    console.log(_device.localName)
+    setRunning(!running);
   }
+
+  
 
   return (
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
