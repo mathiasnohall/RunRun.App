@@ -3,8 +3,8 @@ import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
 import { BleManager, Device, BleError } from "react-native-ble-plx"
-import { Base64 } from "../util/base64"
 import { v4 as uuidv4 } from "uuid"
+import { encode } from "js-base64"
 
 const _manager: BleManager = new BleManager()
 let _device: Device
@@ -53,9 +53,9 @@ export default function Home() {
 
   const getInputValue = () => {
     if(running){
-      return "stop"
+      return encode("stop")
     }
-    return "start";
+    return encode("start");
   }
 
   const onPressStart = () => {
@@ -68,7 +68,7 @@ export default function Home() {
       _device.id,
       UARTServiceUUID,
       UARTTX,
-      Base64.encode(getInputValue()),
+      getInputValue(),
       uuidv4()
     )
     setRunning(!running);
