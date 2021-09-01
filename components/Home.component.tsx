@@ -2,49 +2,28 @@ import React, { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
-import { BleManager, Device, Characteristic, Service, Descriptor, BleError } from "react-native-ble-plx"
+import { BleManager, Device, BleError } from "react-native-ble-plx"
 import { Base64 } from "../util/base64"
+import { v4 as uuidv4 } from "uuid"
 
 const _manager: BleManager = new BleManager()
 let _device: Device
 
-export default function Home() {
-  const [services, setServices] = useState<Service[]>([])
-  const [characteristics, setCharacteristics] = useState<Characteristic[]>([])
-  const [descriptors, setDescriptors] = useState<Descriptor[]>([])
+const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
 
+export default function Home() {
   const [running, setRunning] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
 
-  const getCharacteristics = async (service: Service) => {
-    const newCharacteristics = await service.characteristics()
-    setCharacteristics(newCharacteristics)
-    newCharacteristics.forEach(async (characteristic) => {
-      const newDescriptors = await characteristic.descriptors()
-      setDescriptors((prev) => [...new Set([...prev, ...newDescriptors])])
-    })
-  }
-
   const getDeviceInformation = async (device: Device) => {
-    console.log("connecting to " + device.localName)
     const connectedDevice = await device.connect()
     _device = device
-    setConnected(true)
 
     const isConnected = await connectedDevice.isConnected()
     console.log("connected " + isConnected)
     const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
-    const discoveredServices = await allServicesAndCharacteristics.services()
-    setServices(discoveredServices)
-    console.log("connected to " + device.localName)
-    discoveredServices.forEach(async (service) => {
-      console.log("service uuid:" + service.uuid)
-      if(service.uuid === "6e400001-b5a3-f393-e0a9-e50e24dcca9e")
-      {
-        await getCharacteristics(service)
-      }
-    })
-    console.log("done")
+    setConnected(true)
   }
 
   const handleDeviceScan = async (error: BleError | null, device: Device | null) => {
@@ -54,12 +33,11 @@ export default function Home() {
     }
     if (device != null && device.localName === "Adafruit Bluefruit LE") {
       console.log("found " + device?.localName)
-      console.log("can connect " + device?.isConnectable)
       _manager.stopDeviceScan()
 
       device.onDisconnected(() => {
         console.log("disconneced")
-        //setConnected(false)
+        setConnected(false)
       })
       await getDeviceInformation(device)
     }
@@ -88,15 +66,13 @@ export default function Home() {
     
     _manager.writeCharacteristicWithResponseForDevice(
       _device.id,
-      "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-      "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+      UARTServiceUUID,
+      UARTTX,
       Base64.encode(getInputValue()),
-      "5eedbf05-52f0-40ed-8f22-14e818501dd8"
+      uuidv4()
     )
     setRunning(!running);
-  }
-
-  
+  }  
 
   return (
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
