@@ -2,69 +2,77 @@ import React, { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
-import { BleManager, Device, State } from "react-native-ble-plx"
+import { BleManager, Device, BleError } from "react-native-ble-plx"
+import { v4 as uuidv4 } from "uuid"
+import { encode } from "js-base64"
+
+const _manager: BleManager = new BleManager()
+let _device: Device
+
+const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
 
 export default function Home() {
   const [running, setRunning] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
 
+  const getDeviceInformation = async (device: Device) => {
+    const connectedDevice = await device.connect()
+    _device = device
+
+    const isConnected = await connectedDevice.isConnected()
+    console.log("connected " + isConnected)
+    const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
+    setConnected(true)
+  }
+
+  const handleDeviceScan = async (error: BleError | null, device: Device | null) => {
+    if (error) {
+      console.log(error)
+      return
+    }
+    if (device != null && device.localName === "Adafruit Bluefruit LE") {
+      console.log("found " + device?.localName)
+      _manager.stopDeviceScan()
+
+      device.onDisconnected(() => {
+        console.log("disconneced")
+        setConnected(false)
+      })
+      await getDeviceInformation(device)
+    }
+  }
+
   useEffect(() => {
     if (!connected) {
-      try {
-        const manager = new BleManager()
-        manager.onStateChange((state) => {
-          const subscription = manager.onStateChange((state) => {
-            if (state === State.PoweredOn) {
-              manager.startDeviceScan(null, { allowDuplicates: false }, (error, device) => {
-                if (error) {
-                  console.log(error)
-                  return
-                }
-                console.log(device?.localName)
-                if (device != null && device.localName === "Adafruit Bluefruit LE") {
-                  manager.stopDeviceScan()
-
-                  device.onDisconnected(() => {
-                    console.log("disconnected")
-                    setConnected(false)
-                  })
-
-                  console.log("connecting to: " + device.localName)
-                  device
-                    .connect()
-                    .then((device) => {
-                      device.discoverAllServicesAndCharacteristics()
-                      return device
-                    })
-                    .then((device) => {
-                      console.log("connected!")
-                      setConnected(true)
-                      // Do work on device with services and characteristics
-                    })
-                    .catch((error) => {
-                      console.log(error)
-                      // Handle errors
-                    })
-                }
-              })
-              subscription.remove()
-            }
-          }, true)
-          return () => {
-            subscription.remove()
-            manager.destroy()
-          }
-        })
-      } catch {}
+      console.log("start scanning")
+      _manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
     }
   }, [connected, setConnected])
+
+
+  const getInputValue = () => {
+    if(running){
+      return encode("stop")
+    }
+    return encode("start");
+  }
 
   const onPressStart = () => {
     if (!connected) {
       return
     }
-    setRunning(!running)
-  }
+    console.log(getInputValue())
+    
+    _manager.writeCharacteristicWithResponseForDevice(
+      _device.id,
+      UARTServiceUUID,
+      UARTTX,
+      getInputValue(),
+      uuidv4()
+    )
+    setRunning(!running);
+  }  
 
   return (
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
