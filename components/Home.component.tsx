@@ -11,6 +11,7 @@ let _device: Device
 
 const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
 const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+const UARTRX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 
 export default function Home() {
   const [running, setRunning] = useState<boolean>(false)
@@ -50,29 +51,21 @@ export default function Home() {
     }
   }, [connected, setConnected])
 
-
-  const getInputValue = () => {
-    if(running){
+  const getInputValue = (): string => {
+    if (running) {
       return encode("stop")
     }
-    return encode("start");
+    return encode("start")
   }
 
   const onPressStart = () => {
     if (!connected) {
       return
     }
-    console.log(getInputValue())
-    
-    _manager.writeCharacteristicWithResponseForDevice(
-      _device.id,
-      UARTServiceUUID,
-      UARTTX,
-      getInputValue(),
-      uuidv4()
-    )
-    setRunning(!running);
-  }  
+
+    _manager.writeCharacteristicWithResponseForDevice(_device.id, UARTServiceUUID, UARTTX, getInputValue(), uuidv4())
+    setRunning(!running)
+  }
 
   return (
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
