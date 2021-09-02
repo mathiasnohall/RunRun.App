@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react"
+import "react-native-get-random-values"
+import React, {useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
@@ -26,6 +27,11 @@ export default function Home() {
     const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
     setConnected(true)
   }
+  
+  const handleDisconnected = async () => {
+      console.log("disconneced")
+      setConnected(false)
+  };
 
   const handleDeviceScan = async (error: BleError | null, device: Device | null) => {
     if (error) {
@@ -37,8 +43,7 @@ export default function Home() {
       _manager.stopDeviceScan()
 
       device.onDisconnected(() => {
-        console.log("disconneced")
-        setConnected(false)
+        handleDisconnected();
       })
       await getDeviceInformation(device)
     }
