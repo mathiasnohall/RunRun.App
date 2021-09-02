@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
 import { BleManager, Device, BleError } from "react-native-ble-plx"
+import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import { encode } from "js-base64"
 
