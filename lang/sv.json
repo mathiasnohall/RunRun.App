@@ -1,5 +1,6 @@
 {
   "start" : "Start running",
   "stop" : "Stop",
-  "connecting": "Connecting"
+  "connecting": "Connecting",
+  "settings": "Settings"
 }

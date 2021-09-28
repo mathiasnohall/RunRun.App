@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { ImageBackground, Pressable, StyleSheet, Text, View, Image } from "react-native"
+import { ImageBackground, Pressable, StyleSheet, Text, View, Image, ActivityIndicator } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
 import { BleManager, Device, BleError } from "react-native-ble-plx"
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import { encode } from "js-base64"
+import { useNavigation } from "@react-navigation/core"
 
-const _manager: BleManager = new BleManager()
+//const _manager: BleManager = new BleManager()
 let _device: Device
 
 const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
@@ -17,6 +18,7 @@ const UARTRX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 export default function Home() {
   const [running, setRunning] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
+  const navigation = useNavigation()
 
   const getDeviceInformation = async (device: Device) => {
     const connectedDevice = await device.connect()
@@ -35,7 +37,7 @@ export default function Home() {
     }
     if (device != null && device.localName === "Adafruit Bluefruit LE") {
       console.log("found " + device?.localName)
-      _manager.stopDeviceScan()
+      //_manager.stopDeviceScan()
 
       device.onDisconnected(() => {
         console.log("disconneced")
@@ -45,12 +47,12 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!connected) {
       console.log("start scanning")
       _manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
     }
-  }, [connected, setConnected])
+  }, [connected, setConnected])*/
 
   const getInputValue = (): string => {
     if (running) {
@@ -64,7 +66,7 @@ export default function Home() {
       return
     }
 
-    _manager.writeCharacteristicWithResponseForDevice(_device.id, UARTServiceUUID, UARTTX, getInputValue(), uuidv4())
+    //_manager.writeCharacteristicWithResponseForDevice(_device.id, UARTServiceUUID, UARTTX, getInputValue(), uuidv4())
     setRunning(!running)
   }
 
@@ -72,6 +74,14 @@ export default function Home() {
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
       <View>
         <Image source={require("./../assets/logo.png")} style={styles.logo} />
+        <Pressable onPress={() => navigation.navigate("Settings")} style={styles.settingsButton}>
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>
+              <FormattedMessage id="settings" />
+            </Text>
+            <FontAwesome name="sliders" size={22} color="white" />
+          </View>
+        </Pressable>
         <Pressable onPress={onPressStart} style={styles.button}>
           <View style={styles.textContainer}>
             {!connected && (
@@ -79,7 +89,7 @@ export default function Home() {
                 <Text style={styles.text}>
                   <FormattedMessage id="connecting" />
                 </Text>
-                <FontAwesome style={styles.icon} name="spinner" size={22} color="white" />
+                <ActivityIndicator size="small" color="white" />
               </>
             )}
             {connected && !running && (
@@ -87,7 +97,7 @@ export default function Home() {
                 <Text style={styles.text}>
                   <FormattedMessage id="start" />
                 </Text>
-                <Ionicons style={styles.icon} name="play-outline" size={22} color="white" />
+                <Ionicons name="play-outline" size={22} color="white" />
               </>
             )}
             {connected && running && (
@@ -95,7 +105,7 @@ export default function Home() {
                 <Text style={styles.text}>
                   <FormattedMessage id="stop" />
                 </Text>
-                <Ionicons style={styles.icon} name="stop-outline" size={22} color="white" />
+                <Ionicons name="stop-outline" size={22} color="white" />
               </>
             )}
           </View>
@@ -126,6 +136,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#6B7B67",
   },
+  settingsButton: {
+    padding: 20,
+    margin: 20,
+    borderRadius: 10,
+    border: "solid 1px white",
+  },
   textContainer: {
     display: "flex",
     flexDirection: "row",
@@ -137,5 +153,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
   },
-  icon: {},
 })

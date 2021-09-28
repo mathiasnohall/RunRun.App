@@ -3,16 +3,19 @@ import { FormattedMessage } from "react-intl"
 import { Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { FontAwesome } from "@expo/vector-icons"
 import "react-native-get-random-values"
+import { useNavigation } from "@react-navigation/native"
 
 export default function Settings() {
   const handleSpeedChange = (speed: number) => void {}
 
+  const navigation = useNavigation()
   return (
     <View>
       <FontAwesome style={styles.icon} name="arrow-left" size={22} color="white" />
+      <Pressable onPress={() => navigation.navigate("Home")} style={styles.button} />
       <Text style={styles.text}>
-            <FormattedMessage id="speed" />
-          </Text>
+        <FormattedMessage id="speed" />
+      </Text>
       <Pressable onPress={handleSpeedChange(7)} style={styles.button}>
         <>
           <Text style={styles.text}>
