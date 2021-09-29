@@ -2,5 +2,10 @@
   "start" : "Start running",
   "stop" : "Stop",
   "connecting": "Connecting",
-  "settings": "Settings"
+  "settings": "Settings",
+  "speedSlow": "Slow",
+  "speedMedium": "Medium",
+  "speedFast": "Fast",
+  "distance": "Distance",
+  "deviceInfo": "Device information"
 }

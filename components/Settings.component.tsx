@@ -1,28 +1,66 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { FormattedMessage } from "react-intl"
 import { Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { FontAwesome } from "@expo/vector-icons"
 import "react-native-get-random-values"
 import { useNavigation } from "@react-navigation/native"
+import DeviceComponent, { DeviceParams } from "./Device.component"
+import { Routes } from "../routes/routes"
 
-export default function Settings() {
-  const handleSpeedChange = (speed: number) => void {}
+export type SettingsParams = {
+  speedChange: (speed: number) => void
+  distanceChange: (speed: number) => void
+  device: DeviceParams
+}
 
+export default function Settings(params: SettingsParams) {
+  const { speedChange, distanceChange, device } = params
   const navigation = useNavigation()
   return (
     <View>
-      <FontAwesome style={styles.icon} name="arrow-left" size={22} color="white" />
-      <Pressable onPress={() => navigation.navigate("Home")} style={styles.button} />
-      <Text style={styles.text}>
-        <FormattedMessage id="speed" />
-      </Text>
-      <Pressable onPress={handleSpeedChange(7)} style={styles.button}>
-        <>
-          <Text style={styles.text}>
-            <FormattedMessage id="speed.slow" />
-          </Text>
-        </>
+      <Pressable onPress={() => navigation.navigate(Routes.Home as never)} style={styles.button}>
+        <FontAwesome style={styles.icon} name="arrow-left" size={22} color="white" />
       </Pressable>
+      <View>
+        <Text style={styles.text}>
+          <FormattedMessage id="speed" />
+        </Text>
+        <Pressable onPress={() => speedChange(1)} style={styles.button}>
+          <>
+            <Text style={styles.text}>
+              <FormattedMessage id="speedSlow" />
+            </Text>
+          </>
+        </Pressable>
+        <Pressable onPress={() => speedChange(2)} style={styles.button}>
+          <>
+            <Text style={styles.text}>
+              <FormattedMessage id="speedMedium" />
+            </Text>
+          </>
+        </Pressable>
+        <Pressable onPress={() => speedChange(3)} style={styles.button}>
+          <>
+            <Text style={styles.text}>
+              <FormattedMessage id="speedFast" />
+            </Text>
+          </>
+        </Pressable>
+      </View>
+
+      <View>
+        <Text style={styles.text}>
+          <FormattedMessage id="distance" />
+        </Text>
+        <Pressable onPress={() => distanceChange(1)} style={styles.button}>
+          <>
+            <Text style={styles.text}>
+              <FormattedMessage id="distance" />
+            </Text>
+          </>
+        </Pressable>
+      </View>
+      <DeviceComponent id={device.id} name={device.name} rssi={device.rssi} manufacturer={device.manufacturer} serviceData={device.serviceData} />
     </View>
   )
 }

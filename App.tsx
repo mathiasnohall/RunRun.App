@@ -5,6 +5,7 @@ import Home from "./components/Home.component"
 import Settings from "./components/Settings.component"
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { Routes } from "./routes/routes"
 
 const Stack = createNativeStackNavigator()
 
@@ -13,13 +14,13 @@ export default function App() {
     <IntlProvider messages={sv} locale="sv-SE">
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Home"
+          initialRouteName={Routes.Home}
           screenOptions={() => ({
             headerShown: false,
           })}
         >
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Settings" component={Settings} />
+          <Stack.Screen name={Routes.Home} component={Home} />
+          <Stack.Screen name={Routes.Settings} component={Settings} />
         </Stack.Navigator>
       </NavigationContainer>
     </IntlProvider>
