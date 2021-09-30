@@ -2,85 +2,53 @@ import React, { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image, ActivityIndicator } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
-import { BleManager, Device, BleError } from "react-native-ble-plx"
 import "react-native-get-random-values"
-import { v4 as uuidv4 } from "uuid"
-import { encode } from "js-base64"
 import { useNavigation } from "@react-navigation/core"
 import { Routes } from "../routes/routes"
+import { useBluetooth } from "../ble/useBluetooth"
+import { useCallback } from "hoist-non-react-statics/node_modules/@types/react"
 
-const _manager: BleManager = new BleManager()
-let _device: Device
-
-const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
-const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
-const UARTRX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+const ble = useBluetooth()
 
 export default function Home() {
-  const [running, setRunning] = useState<boolean>(false)
-  const [connected, setConnected] = useState<boolean>(false)
   const [connecting, setConnecting] = useState<boolean>(false)
   const navigation = useNavigation()
 
-  const getDeviceInformation = async (device: Device) => {
-    const connectedDevice = await device.connect()
-    _device = device
+  const onPressConnect = useCallback(
+    () => {
+      if (!connecting) {
+        setConnecting(true)
+        console.log("start connecting")
+        ble.connect()
+        setConnecting(false)
+      }
+    },
+    [ble.connected],
+  );
 
-    const isConnected = await connectedDevice.isConnected()
-    console.log("connected " + isConnected)
-    const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
-  }
 
-  const handleDeviceScan = async (error: BleError | null, device: Device | null) => {
-    if (error) {
-      console.log(error)
-      return
+  const getInputValue = (): string => {
+    if (ble.running) {
+      return "stop"
     }
-    if (device != null && device.localName === "Adafruit Bluefruit LE") {
-      console.log("found " + device?.localName)
-      _manager.stopDeviceScan()
-
-      device.onDisconnected(() => {
-        console.log("disconneced")
-        setConnected(false)
-        setRunning(false)
-      })
-      await getDeviceInformation(device)
-      setConnecting(false)
-      setConnected(true)
-    }
-  }
-
-  const onPressConnect = async () => {
-    if (!connected) {
-      setConnecting(true)
-      console.log("start scanning")
-      _manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
-    }
+    return "start"
   }
 
   const onPressStart = () => {
-    if (!connected) {
+    ble.toggleStart()
+    if (!ble.connected) {
       return
     }
-    _manager.writeCharacteristicWithResponseForDevice(_device.id, UARTServiceUUID, UARTTX, getInputValue(), uuidv4())
-    setRunning(!running)
-  }
-
-  const getInputValue = (): string => {
-    if (running) {
-      return encode("stop")
-    }
-    return encode("start")
+    ble.sendUART(getInputValue())
   }
 
   return (
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
       <View>
         <Image source={require("./../assets/logo.png")} style={styles.logo} />
-        {connected && (
+        {ble.connected && (
           <>
-            <Pressable onPress={() => navigation.navigate(Routes.Settings as never, { device: _device } as never)} style={styles.settingsButton}>
+            <Pressable onPress={() => navigation.navigate(Routes.Settings as never)} style={styles.settingsButton}>
               <View style={styles.textContainer}>
                 <Text style={styles.text}>
                   <FormattedMessage id="settings" />
@@ -90,7 +58,7 @@ export default function Home() {
             </Pressable>
             <Pressable onPress={onPressStart} style={styles.button}>
               <View style={styles.textContainer}>
-                {!running && (
+                {!ble.running && (
                   <>
                     <Text style={styles.text}>
                       <FormattedMessage id="start" />
@@ -98,7 +66,7 @@ export default function Home() {
                     <Ionicons name="play-outline" size={22} color="white" />
                   </>
                 )}
-                {running && (
+                {ble.running && (
                   <>
                     <Text style={styles.text}>
                       <FormattedMessage id="stop" />
@@ -110,7 +78,7 @@ export default function Home() {
             </Pressable>
           </>
         )}
-        {!connected && (
+        {!ble.connected && (
           <>
             {!connecting && (
               <Pressable onPress={onPressConnect} style={styles.button}>

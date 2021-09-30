@@ -1,28 +1,33 @@
 import React from "react"
 import { StyleSheet, Text, View } from "react-native"
 import { FormattedMessage } from "react-intl"
+import { decode } from "js-base64"
 
 export type DeviceParams = {
-  id: string 
+  deviceId: string 
   name: string
-  rssi: string
+  localName: string
+  rssi: number
   manufacturer: string
-  serviceData: string
+  mtu: number
+  txPowerLevel: number
 }
 
 export default function Device(device: DeviceParams) {
-  const { id, name, rssi, manufacturer, serviceData } = device
+  const { deviceId, name, localName, rssi, manufacturer, mtu, txPowerLevel } = device
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
         <FormattedMessage id="deviceInfo" />
       </Text>
       <View style={styles.container}>
-        <Text>{`Id : ${id}`}</Text>
+        <Text>{`Id : ${deviceId}`}</Text>
         <Text>{`Name : ${name}`}</Text>
+        <Text>{`Name : ${localName}`}</Text>
         <Text>{`RSSI : ${rssi}`}</Text>
-        <Text>{`Manufacturer : ${manufacturer}`}</Text>
-        <Text>{`ServiceData : ${serviceData}`}</Text>
+        <Text>{`Manufacturer data: ${decode(manufacturer)}`}</Text>
+        <Text>{`Maximum Transfer Unit : ${mtu}`}</Text>
+        <Text>{`Transfe Power level : ${txPowerLevel}`}</Text>
       </View>
     </View>
   )

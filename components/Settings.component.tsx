@@ -4,23 +4,20 @@ import { Pressable, StyleSheet, Text, View, Image } from "react-native"
 import { FontAwesome } from "@expo/vector-icons"
 import "react-native-get-random-values"
 import { useNavigation } from "@react-navigation/native"
-import DeviceComponent, { DeviceParams } from "./Device.component"
+import DeviceComponent from "./Device.component"
 import { Routes } from "../routes/routes"
+import { useBluetooth } from "../ble/useBluetooth"
 
-export type SettingsParams = {
-  speedChange: (speed: number) => void
-  distanceChange: (speed: number) => void
-  device: DeviceParams | null
-}
+export default function Settings() {
+  const { device, changeSpeed, changeDistance } = useBluetooth()
 
-export default function Settings(params: SettingsParams) {
-  const { device } = params
-  
   const handleSpeedChange = (speed: number) => {
     console.log("speed: " + speed)
+    changeSpeed(speed)
   }
   const handleDistanceChange = (distance: number) => {
     console.log("distance:" + distance)
+    changeDistance(distance)
   }
 
   const navigation = useNavigation()
@@ -30,9 +27,9 @@ export default function Settings(params: SettingsParams) {
         <FontAwesome style={styles.icon} name="arrow-left" size={22} color="white" />
       </Pressable>
       <Text style={styles.text}>
-          <FormattedMessage id="speed" />
-        </Text>
-      <View style={styles.speedContainer}>        
+        <FormattedMessage id="speed" />
+      </Text>
+      <View style={styles.speedContainer}>
         <Pressable onPress={() => handleSpeedChange(1)} style={styles.button}>
           <>
             <Text style={styles.text}>
@@ -67,7 +64,17 @@ export default function Settings(params: SettingsParams) {
           </>
         </Pressable>
       </View>
-      {device && <DeviceComponent id={device.id} name={device.name} rssi={device.rssi} manufacturer={device.manufacturer} serviceData={device.serviceData} />}
+      {device && (
+        <DeviceComponent
+          deviceId={device.id}
+          name={device.name ?? ""}
+          localName={device.localName ?? ""}
+          rssi={device.rssi ?? 0}
+          manufacturer={device.manufacturerData ?? ""}
+          mtu={device.mtu ?? 0}
+          txPowerLevel={device.txPowerLevel ?? 0}
+        />
+      )}
     </View>
   )
 }
