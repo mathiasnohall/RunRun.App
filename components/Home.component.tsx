@@ -19,6 +19,7 @@ const UARTRX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 export default function Home() {
   const [running, setRunning] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
+  const [connecting, setConnecting] = useState<boolean>(false)
   const navigation = useNavigation()
 
   const getDeviceInformation = async (device: Device) => {
@@ -45,12 +46,14 @@ export default function Home() {
         setRunning(false)
       })
       await getDeviceInformation(device)
+      setConnecting(false)
       setConnected(true)
     }
   }
 
   const onPressConnect = async () => {
     if (!connected) {
+      setConnecting(true)
       console.log("start scanning")
       _manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
     }
@@ -63,8 +66,6 @@ export default function Home() {
     _manager.writeCharacteristicWithResponseForDevice(_device.id, UARTServiceUUID, UARTTX, getInputValue(), uuidv4())
     setRunning(!running)
   }
-  const onSpeedChange = (speed: number) => void {}
-  const onDistanceChange = (speed: number) => void {}
 
   const getInputValue = (): string => {
     if (running) {
@@ -79,10 +80,7 @@ export default function Home() {
         <Image source={require("./../assets/logo.png")} style={styles.logo} />
         {connected && (
           <>
-            <Pressable
-              onPress={() => navigation.navigate(Routes.Settings as never, { onDistanceChange, onSpeedChange, _device } as never)}
-              style={styles.settingsButton}
-            >
+            <Pressable onPress={() => navigation.navigate(Routes.Settings as never, { device: _device } as never)} style={styles.settingsButton}>
               <View style={styles.textContainer}>
                 <Text style={styles.text}>
                   <FormattedMessage id="settings" />
@@ -114,18 +112,25 @@ export default function Home() {
         )}
         {!connected && (
           <>
-            <Text style={styles.text}>
-              <FormattedMessage id="connecting" />
-            </Text>
-            <ActivityIndicator size="small" color="white" />
-            <Pressable onPress={onPressConnect} style={styles.button}>
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>
-                  <FormattedMessage id="connecting" />
-                </Text>
-                <ActivityIndicator size="small" color="white" />
+            {!connecting && (
+              <Pressable onPress={onPressConnect} style={styles.button}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>
+                    <FormattedMessage id="connect" />
+                  </Text>
+                </View>
+              </Pressable>
+            )}
+            {connecting && (
+              <View style={styles.button}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>
+                    <FormattedMessage id="connecting" />
+                  </Text>
+                  <ActivityIndicator size="small" color="white" />
+                </View>
               </View>
-            </Pressable>
+            )}
           </>
         )}
       </View>
@@ -145,7 +150,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 305,
     height: 250,
-    marginBottom: 150,
+    marginBottom: 225,
     justifyContent: "center",
   },
   button: {
@@ -158,7 +163,9 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 20,
     borderRadius: 10,
-    border: "solid 1px white",
+    borderWidth: 1,
+    borderColor: "white",
+    borderStyle: "solid",
   },
   textContainer: {
     display: "flex",

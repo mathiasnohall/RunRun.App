@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native"
 import { FormattedMessage } from "react-intl"
 
 export type DeviceParams = {
-  id: string
+  id: string 
   name: string
   rssi: string
   manufacturer: string
@@ -13,7 +13,7 @@ export type DeviceParams = {
 export default function Device(device: DeviceParams) {
   const { id, name, rssi, manufacturer, serviceData } = device
   return (
-    <>
+    <View style={styles.container}>
       <Text style={styles.text}>
         <FormattedMessage id="deviceInfo" />
       </Text>
@@ -24,7 +24,7 @@ export default function Device(device: DeviceParams) {
         <Text>{`Manufacturer : ${manufacturer}`}</Text>
         <Text>{`ServiceData : ${serviceData}`}</Text>
       </View>
-    </>
+    </View>
   )
 }
 
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flex: 1,
-    resizeMode: "cover",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",

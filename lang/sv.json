@@ -1,8 +1,10 @@
 {
   "start" : "Start running",
   "stop" : "Stop",
+  "connect": "Connect to RunRun device",
   "connecting": "Connecting",
   "settings": "Settings",
+  "speed": "Speed",
   "speedSlow": "Slow",
   "speedMedium": "Medium",
   "speedFast": "Fast",

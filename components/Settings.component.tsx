@@ -10,36 +10,44 @@ import { Routes } from "../routes/routes"
 export type SettingsParams = {
   speedChange: (speed: number) => void
   distanceChange: (speed: number) => void
-  device: DeviceParams
+  device: DeviceParams | null
 }
 
 export default function Settings(params: SettingsParams) {
-  const { speedChange, distanceChange, device } = params
+  const { device } = params
+  
+  const handleSpeedChange = (speed: number) => {
+    console.log("speed: " + speed)
+  }
+  const handleDistanceChange = (distance: number) => {
+    console.log("distance:" + distance)
+  }
+
   const navigation = useNavigation()
   return (
-    <View>
-      <Pressable onPress={() => navigation.navigate(Routes.Home as never)} style={styles.button}>
+    <View style={styles.container}>
+      <Pressable onPress={() => navigation.navigate(Routes.Home as never)} style={styles.backButton}>
         <FontAwesome style={styles.icon} name="arrow-left" size={22} color="white" />
       </Pressable>
-      <View>
-        <Text style={styles.text}>
+      <Text style={styles.text}>
           <FormattedMessage id="speed" />
         </Text>
-        <Pressable onPress={() => speedChange(1)} style={styles.button}>
+      <View style={styles.speedContainer}>        
+        <Pressable onPress={() => handleSpeedChange(1)} style={styles.button}>
           <>
             <Text style={styles.text}>
               <FormattedMessage id="speedSlow" />
             </Text>
           </>
         </Pressable>
-        <Pressable onPress={() => speedChange(2)} style={styles.button}>
+        <Pressable onPress={() => handleSpeedChange(2)} style={styles.button}>
           <>
             <Text style={styles.text}>
               <FormattedMessage id="speedMedium" />
             </Text>
           </>
         </Pressable>
-        <Pressable onPress={() => speedChange(3)} style={styles.button}>
+        <Pressable onPress={() => handleSpeedChange(3)} style={styles.button}>
           <>
             <Text style={styles.text}>
               <FormattedMessage id="speedFast" />
@@ -47,12 +55,11 @@ export default function Settings(params: SettingsParams) {
           </>
         </Pressable>
       </View>
-
-      <View>
-        <Text style={styles.text}>
-          <FormattedMessage id="distance" />
-        </Text>
-        <Pressable onPress={() => distanceChange(1)} style={styles.button}>
+      <Text style={styles.text}>
+        <FormattedMessage id="distance" />
+      </Text>
+      <View style={styles.distanceContainer}>
+        <Pressable onPress={() => handleDistanceChange(1)} style={styles.button}>
           <>
             <Text style={styles.text}>
               <FormattedMessage id="distance" />
@@ -60,7 +67,7 @@ export default function Settings(params: SettingsParams) {
           </>
         </Pressable>
       </View>
-      <DeviceComponent id={device.id} name={device.name} rssi={device.rssi} manufacturer={device.manufacturer} serviceData={device.serviceData} />
+      {device && <DeviceComponent id={device.id} name={device.name} rssi={device.rssi} manufacturer={device.manufacturer} serviceData={device.serviceData} />}
     </View>
   )
 }
@@ -69,16 +76,17 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flex: 1,
-    resizeMode: "cover",
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 15,
+    backgroundColor: "#303032",
   },
-  logo: {
-    width: 305,
-    height: 250,
-    marginBottom: 150,
-    justifyContent: "center",
+  speedContainer: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  distanceContainer: {
+    display: "flex",
+    flexDirection: "row",
   },
   button: {
     padding: 20,
@@ -86,16 +94,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#6B7B67",
   },
-  textContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "baseline",
-  },
   text: {
     color: "#fff",
     fontWeight: "bold",
     fontSize: 20,
+  },
+  backButton: {
+    marginTop: 20,
+    marginBottom: 20,
   },
   icon: {},
 })
