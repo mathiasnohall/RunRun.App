@@ -7,18 +7,19 @@ import { useNavigation } from "@react-navigation/core"
 import { Routes } from "../routes/routes"
 import { useBluetooth } from "../ble/useBluetooth"
 
-const ble = useBluetooth()
-
 export default function Home() {
   const [connecting, setConnecting] = useState<boolean>(false)
   const navigation = useNavigation()
+  const ble = useBluetooth()
 
   const onPressConnect = useCallback(() => {
-    if (!connecting) {
-      setConnecting(true)
+    if (!connecting && !ble.connected) {
       console.log("start connecting")
+      setConnecting(true)
       ble.connect()
-      setConnecting(false)
+      if (ble.connected) {
+        setConnecting(false)
+      }
     }
   }, [ble.connected])
 
