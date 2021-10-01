@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useCallback } from "react"
 import { FormattedMessage } from "react-intl"
 import { ImageBackground, Pressable, StyleSheet, Text, View, Image, ActivityIndicator } from "react-native"
 import { Ionicons, FontAwesome } from "@expo/vector-icons"
@@ -6,7 +6,6 @@ import "react-native-get-random-values"
 import { useNavigation } from "@react-navigation/core"
 import { Routes } from "../routes/routes"
 import { useBluetooth } from "../ble/useBluetooth"
-import { useCallback } from "hoist-non-react-statics/node_modules/@types/react"
 
 const ble = useBluetooth()
 
@@ -14,32 +13,17 @@ export default function Home() {
   const [connecting, setConnecting] = useState<boolean>(false)
   const navigation = useNavigation()
 
-  const onPressConnect = useCallback(
-    () => {
-      if (!connecting) {
-        setConnecting(true)
-        console.log("start connecting")
-        ble.connect()
-        setConnecting(false)
-      }
-    },
-    [ble.connected],
-  );
-
-
-  const getInputValue = (): string => {
-    if (ble.running) {
-      return "stop"
+  const onPressConnect = useCallback(() => {
+    if (!connecting) {
+      setConnecting(true)
+      console.log("start connecting")
+      ble.connect()
+      setConnecting(false)
     }
-    return "start"
-  }
+  }, [ble.connected])
 
   const onPressStart = () => {
     ble.toggleStart()
-    if (!ble.connected) {
-      return
-    }
-    ble.sendUART(getInputValue())
   }
 
   return (
