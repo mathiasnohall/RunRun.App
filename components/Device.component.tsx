@@ -4,7 +4,7 @@ import { FormattedMessage } from "react-intl"
 import { decode } from "js-base64"
 
 export type DeviceParams = {
-  deviceId: string 
+  deviceId: string
   name: string
   localName: string
   rssi: number
@@ -17,10 +17,10 @@ export default function Device(device: DeviceParams) {
   const { deviceId, name, localName, rssi, manufacturer, mtu, txPowerLevel } = device
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
+      <Text>
         <FormattedMessage id="deviceInfo" />
       </Text>
-      <View style={styles.container}>
+      <View>
         <Text>{`Id : ${deviceId}`}</Text>
         <Text>{`Name : ${name}`}</Text>
         <Text>{`Name : ${localName}`}</Text>
@@ -36,10 +36,9 @@ export default function Device(device: DeviceParams) {
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    flex: 1,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-  },
-  text: {},
+    color: "white",
+  }
 })

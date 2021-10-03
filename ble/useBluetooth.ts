@@ -65,17 +65,17 @@ export const useBluetooth = (): BluetoothProps => {
     }
   }
   const changeSpeed = (speed: number) => {
-    sendUART(encode("speed:" + speed))
+    sendUART("speed:" + speed)
   }
   const changeDistance = (distance: number) => {
-    sendUART(encode("distance:" + distance))
+    sendUART("distance:" + distance)
   }
 
   const getInputValue = (): string => {
     if (running) {
-      return encode("stop")
+      return "stop"
     }
-    return encode("start")
+    return "start"
   }
 
   const toggleStart = () => {
