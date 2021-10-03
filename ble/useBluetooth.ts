@@ -1,11 +1,13 @@
 import { encode } from "js-base64"
 import { v4 as uuidv4 } from "uuid"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { BleError, BleManager, Device } from "react-native-ble-plx"
 
 const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
 const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
 const UARTRX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+
+const DEVICE_NAME: string = "Adafruit Bluefruit LE"
 
 export type BluetoothProps = {
   toggleStart: () => void
@@ -17,29 +19,23 @@ export type BluetoothProps = {
   connected: boolean
 }
 
+var manager = new BleManager()
+
 export const useBluetooth = (): BluetoothProps => {
-  const [initiated, setInitiated] = useState<boolean>(false)
-  const [manager, setManager] = useState<BleManager | null>(null)
   const [device, setDevice] = useState<Device | null>(null)
 
   const [running, setRunning] = useState<boolean>(false)
   const [connected, setConnected] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (!initiated) setManager(new BleManager())
-    setInitiated(true)
-  }, [initiated, manager])
-
   const sendUART = (data: string) => {
-    if (manager && device) {
+    if (device) {
       manager.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
     }
   }
 
   const connect = () => {
-    if (manager) {
-      manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
-    }
+    console.log("start connecting")
+    manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
   }
 
   const getDeviceInformation = async (device: Device) => {
@@ -56,7 +52,7 @@ export const useBluetooth = (): BluetoothProps => {
       console.log(error)
       return
     }
-    if (manager != null && device != null && device.localName === "Adafruit Bluefruit LE") {
+    if (device != null && device.localName === DEVICE_NAME) {
       console.log("found " + device?.localName)
       manager.stopDeviceScan()
 
@@ -64,16 +60,17 @@ export const useBluetooth = (): BluetoothProps => {
         console.log("disconneced")
         setConnected(false)
         setRunning(false)
+        device = null;
       })
       await getDeviceInformation(device)
       setConnected(true)
     }
   }
   const changeSpeed = (speed: number) => {
-    sendUART(encode("speed:"+speed))
+    sendUART(encode("speed:" + speed))
   }
   const changeDistance = (distance: number) => {
-    sendUART(encode("distance:"+distance))
+    sendUART(encode("distance:" + distance))
   }
 
   const getInputValue = (): string => {

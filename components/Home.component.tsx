@@ -14,7 +14,6 @@ export default function Home() {
 
   const onPressConnect = useCallback(() => {
     if (!connecting && !ble.connected) {
-      console.log("start connecting")
       setConnecting(true)
       ble.connect()
       if (ble.connected) {
