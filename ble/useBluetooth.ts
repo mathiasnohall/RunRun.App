@@ -1,7 +1,8 @@
 import { encode } from "js-base64"
 import { v4 as uuidv4 } from "uuid"
-import { useState } from "react"
 import { BleError, BleManager, Device } from "react-native-ble-plx"
+import { useContext } from "hoist-non-react-statics/node_modules/@types/react"
+import BleContext from "./bleContext"
 
 const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
 const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
@@ -22,10 +23,7 @@ export type BluetoothProps = {
 var manager = new BleManager()
 
 export const useBluetooth = (): BluetoothProps => {
-  const [device, setDevice] = useState<Device | null>(null)
-
-  const [running, setRunning] = useState<boolean>(false)
-  const [connected, setConnected] = useState<boolean>(false)
+  const { device, connected, running, setConnected: setConnected, setRunning: setRunning, setDevice } = useContext(BleContext)
 
   const sendUART = (data: string) => {
     if (device) {
@@ -60,7 +58,7 @@ export const useBluetooth = (): BluetoothProps => {
         console.log("disconneced")
         setConnected(false)
         setRunning(false)
-        device = null;
+        device = null
       })
       await getDeviceInformation(device)
       setConnected(true)
