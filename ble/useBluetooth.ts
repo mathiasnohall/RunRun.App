@@ -1,8 +1,8 @@
 import { encode } from "js-base64"
 import { v4 as uuidv4 } from "uuid"
 import { BleError, BleManager, Device } from "react-native-ble-plx"
-import { useContext } from "hoist-non-react-statics/node_modules/@types/react"
 import BleContext from "./bleContext"
+import { useContext } from "react"
 
 const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
 const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
