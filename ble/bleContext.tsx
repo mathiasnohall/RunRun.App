@@ -25,12 +25,12 @@ export default BleContext
 export const BleProvider: FC = ({ children }) => {
   const [connected, setConnected] = useState(defaultState.connected)
   const [running, setRunning] = useState(defaultState.running)
-  const [device, setDevice] = useState<Device | null>(null)
+  const [device, setDevice] = useState<Device | null>(defaultState.device)
 
   return (
     <BleContext.Provider
       value={{
-        device: device,
+        device,
         running,
         connected,
         setConnected: setConnected,

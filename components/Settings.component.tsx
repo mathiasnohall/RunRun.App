@@ -9,15 +9,21 @@ import { Routes } from "../routes/routes"
 import { useBluetooth } from "../ble/useBluetooth"
 
 export default function Settings() {
-  const { device, changeSpeed, changeDistance } = useBluetooth()
+  const { device, changeSpeed, changeDistance, changeWait } = useBluetooth()
 
   const handleSpeedChange = (speed: number) => {
     console.log("speed: " + speed)
     changeSpeed(speed)
   }
+
   const handleDistanceChange = (distance: number) => {
     console.log("distance:" + distance)
     changeDistance(distance)
+  }
+  
+  const handleWaitChange = (wait: number) => {
+    console.log("wait:" + wait)
+    changeWait(wait)
   }
 
   const navigation = useNavigation()
@@ -31,25 +37,19 @@ export default function Settings() {
       </Text>
       <View style={styles.speedContainer}>
         <Pressable onPress={() => handleSpeedChange(1)} style={styles.button}>
-          <>
-            <Text style={styles.text}>
-              <FormattedMessage id="speedSlow" />
-            </Text>
-          </>
+          <Text style={styles.text}>
+            <FormattedMessage id="speedSlow" />
+          </Text>
         </Pressable>
         <Pressable onPress={() => handleSpeedChange(2)} style={styles.button}>
-          <>
-            <Text style={styles.text}>
-              <FormattedMessage id="speedMedium" />
-            </Text>
-          </>
+          <Text style={styles.text}>
+            <FormattedMessage id="speedMedium" />
+          </Text>
         </Pressable>
         <Pressable onPress={() => handleSpeedChange(3)} style={styles.button}>
-          <>
-            <Text style={styles.text}>
-              <FormattedMessage id="speedFast" />
-            </Text>
-          </>
+          <Text style={styles.text}>
+            <FormattedMessage id="speedFast" />
+          </Text>
         </Pressable>
       </View>
       <Text style={styles.text}>
@@ -57,11 +57,20 @@ export default function Settings() {
       </Text>
       <View style={styles.distanceContainer}>
         <Pressable onPress={() => handleDistanceChange(1)} style={styles.button}>
-          <>
-            <Text style={styles.text}>
-              <FormattedMessage id="distance" />
-            </Text>
-          </>
+          <Text style={styles.text}>
+            <FormattedMessage id="distance" />
+          </Text>
+        </Pressable>
+      </View>
+      
+      <Text style={styles.text}>
+        <FormattedMessage id="wait" />
+      </Text>
+      <View style={styles.distanceContainer}>
+        <Pressable onPress={() => handleWaitChange(1)} style={styles.button}>
+          <Text style={styles.text}>
+            <FormattedMessage id="distance" />
+          </Text>
         </Pressable>
       </View>
       {device && (

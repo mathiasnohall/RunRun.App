@@ -11,9 +11,11 @@ const UARTRX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 const DEVICE_NAME: string = "Adafruit Bluefruit LE"
 
 export type BluetoothProps = {
-  toggleStart: () => void
-  changeSpeed: (speed: number) => void
-  changeDistance: (distance: number) => void
+  start: () => Promise<void>
+  stop: () => Promise<void>
+  changeSpeed: (speed: number) => Promise<void>
+  changeDistance: (distance: number) => Promise<void>
+  changeWait: (wait: number) => Promise<void>
   connect: () => void
   device: Device | null
   running: boolean
@@ -25,9 +27,9 @@ var manager = new BleManager()
 export const useBluetooth = (): BluetoothProps => {
   const { device, connected, running, setConnected: setConnected, setRunning: setRunning, setDevice } = useContext(BleContext)
 
-  const sendUART = (data: string) => {
+  const sendUART = async (data: string) => {
     if (device) {
-      manager.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
+      await manager.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
     }
   }
 
@@ -64,26 +66,33 @@ export const useBluetooth = (): BluetoothProps => {
       setConnected(true)
     }
   }
-  const changeSpeed = (speed: number) => {
-    sendUART("speed:" + speed)
-  }
-  const changeDistance = (distance: number) => {
-    sendUART("distance:" + distance)
+  const changeSpeed = async (speed: number) => {
+    await sendUART("speed:" + speed)
   }
 
-  const getInputValue = (): string => {
-    if (running) {
-      return "stop"
-    }
-    return "start"
+  const changeDistance = async (distance: number) => {
+    await sendUART("distance:" + distance)
+  }
+  
+  const changeWait = async (wait: number) => {
+    await sendUART("wait:" + wait)
   }
 
-  const toggleStart = () => {
-    if (!connected) {
+  const start = async () => {
+    if (!connected || running) {
       return
     }
-    sendUART(getInputValue())
+    await sendUART("start")
+    setRunning(true)
   }
 
-  return { toggleStart, changeSpeed, changeDistance, connect, device, connected, running }
+  const stop = async () => {
+    if (!connected || !running) {
+      return
+    }
+    await sendUART("stop")
+    setRunning(false)
+  }
+
+  return { start, stop, changeSpeed, changeDistance, changeWait, connect, device, connected, running }
 }

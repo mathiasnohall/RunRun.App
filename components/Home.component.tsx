@@ -23,7 +23,11 @@ export default function Home() {
   }, [ble.connected])
 
   const onPressStart = () => {
-    ble.toggleStart()
+    ble.start()
+  }
+  
+  const onPressStop = () => {
+    ble.stop()
   }
 
   return (
@@ -40,26 +44,26 @@ export default function Home() {
                 <FontAwesome name="sliders" size={22} color="white" />
               </View>
             </Pressable>
-            <Pressable onPress={onPressStart} style={styles.button}>
-              <View style={styles.textContainer}>
-                {!ble.running && (
-                  <>
-                    <Text style={styles.text}>
-                      <FormattedMessage id="start" />
-                    </Text>
-                    <Ionicons name="play-outline" size={22} color="white" />
-                  </>
-                )}
-                {ble.running && (
-                  <>
-                    <Text style={styles.text}>
-                      <FormattedMessage id="stop" />
-                    </Text>
-                    <Ionicons name="stop-outline" size={22} color="white" />
-                  </>
-                )}
-              </View>
-            </Pressable>
+            {!ble.running && (
+              <Pressable onPress={onPressStart} style={styles.button}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>
+                    <FormattedMessage id="start" />
+                  </Text>
+                  <Ionicons name="play-outline" size={22} color="white" />
+                </View>
+              </Pressable>
+            )}
+            {ble.running && (
+              <Pressable onPress={onPressStop} style={styles.button}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.text}>
+                    <FormattedMessage id="stop" />
+                  </Text>
+                  <Ionicons name="stop-outline" size={22} color="white" />
+                </View>
+              </Pressable>
+            )}
           </>
         )}
         {!ble.connected && (
