@@ -29,13 +29,13 @@ export const useBluetooth = (): BluetoothProps => {
 
   const sendUART = async (data: string) => {
     if (device) {
-      await manager?.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
+      await manager.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
     }
   }
 
   const connect = () => {
     console.log("start connecting")
-    manager?.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
+    manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
   }
 
   const getDeviceInformation = async (device: Device) => {
@@ -54,7 +54,7 @@ export const useBluetooth = (): BluetoothProps => {
     }
     if (device != null && device.localName === DEVICE_NAME) {
       console.log("found " + device?.localName)
-      manager?.stopDeviceScan()
+      manager.stopDeviceScan()
 
       device.onDisconnected(() => {
         console.log("disconneced")
