@@ -9,6 +9,12 @@
   "speedMedium": "Medium",
   "speedFast": "Fast",
   "distance": "Distance",
+  "distanceShort": "Short",
+  "distanceMedium": "Medium",
+  "distanceLong": "Long",
   "wait": "Wait time",
+  "waitShort": "Fast",
+  "waitMedium": "Medium",
+  "waitLong": "Slow",
   "deviceInfo": "Device information"
 }

@@ -1,7 +1,7 @@
 import { encode } from "js-base64"
 import { v4 as uuidv4 } from "uuid"
 import { BleError, BleManager, Device } from "react-native-ble-plx"
-import BleContext from "./bleContext"
+import BleContext from "../context/bleContext"
 import { useContext } from "react"
 
 const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
@@ -22,20 +22,20 @@ export type BluetoothProps = {
   connected: boolean
 }
 
-var manager = new BleManager()
+const manager: BleManager = new BleManager()
 
 export const useBluetooth = (): BluetoothProps => {
   const { device, connected, running, setConnected: setConnected, setRunning: setRunning, setDevice } = useContext(BleContext)
 
   const sendUART = async (data: string) => {
     if (device) {
-      await manager.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
+      await manager?.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
     }
   }
 
   const connect = () => {
     console.log("start connecting")
-    manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
+    manager?.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
   }
 
   const getDeviceInformation = async (device: Device) => {
@@ -54,7 +54,7 @@ export const useBluetooth = (): BluetoothProps => {
     }
     if (device != null && device.localName === DEVICE_NAME) {
       console.log("found " + device?.localName)
-      manager.stopDeviceScan()
+      manager?.stopDeviceScan()
 
       device.onDisconnected(() => {
         console.log("disconneced")
