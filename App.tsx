@@ -6,7 +6,7 @@ import Settings from "./components/Settings.component"
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Routes } from "./routes/routes"
-import { BleProvider } from "./ble/bleContext"
+import { BleProvider } from "./context/bleContext"
 
 const Stack = createNativeStackNavigator()
 

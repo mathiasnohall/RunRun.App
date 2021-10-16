@@ -1,7 +1,7 @@
 import { encode } from "js-base64"
 import { v4 as uuidv4 } from "uuid"
 import { BleError, BleManager, Device } from "react-native-ble-plx"
-import BleContext from "./bleContext"
+import BleContext from "../context/bleContext"
 import { useContext } from "react"
 
 const UARTServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
@@ -22,7 +22,7 @@ export type BluetoothProps = {
   connected: boolean
 }
 
-var manager = new BleManager()
+var manager: BleManager = new BleManager()
 
 export const useBluetooth = (): BluetoothProps => {
   const { device, connected, running, setConnected: setConnected, setRunning: setRunning, setDevice } = useContext(BleContext)

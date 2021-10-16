@@ -33,9 +33,9 @@ export const BleProvider: FC = ({ children }) => {
         device,
         running,
         connected,
-        setConnected: setConnected,
-        setRunning: setRunning,
-        setDevice: setDevice,
+        setConnected,
+        setRunning,
+        setDevice,
       }}
     >
       {children}
