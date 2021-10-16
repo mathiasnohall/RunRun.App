@@ -1,13 +1,13 @@
 import React, { useContext } from "react"
 import { FormattedMessage } from "react-intl"
-import { Pressable, StyleSheet, Text, View, Image } from "react-native"
+import { Pressable, StyleSheet, Text, View } from "react-native"
 import { FontAwesome } from "@expo/vector-icons"
 import "react-native-get-random-values"
 import { useNavigation } from "@react-navigation/native"
 import DeviceComponent from "./Device.component"
 import { Routes } from "../routes/routes"
 import { useBluetooth } from "../ble/useBluetooth"
-import SettingsContext, { SettingsProvider } from "../context/settingsContext"
+import SettingsContext from "../context/settingsContext"
 
 export default function Settings() {
   const { device, changeSpeed, changeDistance, changeWait } = useBluetooth()
@@ -15,19 +15,19 @@ export default function Settings() {
 
   const handleSpeedChange = async (speed: number) => {
     console.log("speed: " + speed)
-    //await changeSpeed(speed)
+    await changeSpeed(speed)
     setSpeed(speed)
   }
 
   const handleDistanceChange = async (distance: number) => {
     console.log("distance:" + distance)
-    //await changeDistance(distance)
+    await changeDistance(distance)
     setDistance(distance)
   }
 
   const handleWaitChange = async (wait: number) => {
     console.log("wait:" + wait)
-    //await changeWait(wait)
+    await changeWait(wait)
     setWait(wait)
   }
 
