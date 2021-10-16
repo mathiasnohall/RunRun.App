@@ -22,7 +22,7 @@ export type BluetoothProps = {
   connected: boolean
 }
 
-const manager: BleManager = new BleManager()
+var manager: BleManager = new BleManager()
 
 export const useBluetooth = (): BluetoothProps => {
   const { device, connected, running, setConnected: setConnected, setRunning: setRunning, setDevice } = useContext(BleContext)

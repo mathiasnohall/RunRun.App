@@ -135,13 +135,15 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 20,
     borderRadius: 10,
+    color: "#fff",
     backgroundColor: "#6B7B67",
   },
   selectedButton: {
     padding: 20,
     margin: 20,
     borderRadius: 10,
-    backgroundColor: 'red'
+    color:'#6B7B67',
+    backgroundColor: '#FB7938'
   },
   text: {
     color: "#fff",

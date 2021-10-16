@@ -13,7 +13,7 @@
   "distanceMedium": "Medium",
   "distanceLong": "Long",
   "wait": "Wait time",
-  "waitShort": "Fast",
+  "waitShort": "Short",
   "waitMedium": "Medium",
   "waitLong": "Slow",
   "deviceInfo": "Device information"
