@@ -19,7 +19,8 @@
             "peripheral",
             "central"
           ],
-          "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
+          "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices",
+          "bluetoothPeripheralPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
         }
       ]
     ],
@@ -31,10 +32,7 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.runruntarget.app",
-      "infoPlist": {
-        "NSBluetoothPeripheralUsageDescription": "This app uses bluetooth to control the RunRun Bluetooth device."
-      }
+      "bundleIdentifier": "com.runruntarget.app"      
     },
     "android": {
       "adaptiveIcon": {
