@@ -25,7 +25,7 @@ export default function Home() {
   const onPressStart = () => {
     ble.start()
   }
-  
+
   const onPressStop = () => {
     ble.stop()
   }
@@ -33,62 +33,66 @@ export default function Home() {
   return (
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
       <View>
-        <Image source={require("./../assets/logo.png")} style={styles.logo} />
-        {ble.connected && (
-          <>
-            <Pressable onPress={() => navigation.navigate(Routes.Settings as never)} style={styles.settingsButton}>
-              <View style={styles.textContainer}>
-                <Text style={styles.text}>
-                  <FormattedMessage id="settings" />
-                </Text>
-                <FontAwesome name="sliders" size={22} color="white" />
-              </View>
-            </Pressable>
-            {!ble.running && (
-              <Pressable onPress={onPressStart} style={styles.button}>
+        <View>
+          <Image source={require("./../assets/logo.png")} style={styles.logo} />
+        </View>
+        <View>
+          {ble.connected && (
+            <>
+              <Pressable onPress={() => navigation.navigate(Routes.Settings as never)} style={styles.settingsButton}>
                 <View style={styles.textContainer}>
                   <Text style={styles.text}>
-                    <FormattedMessage id="start" />
+                    <FormattedMessage id="settings" />
                   </Text>
-                  <Ionicons name="play-outline" size={22} color="white" />
+                  <FontAwesome name="sliders" size={22} color="white" />
                 </View>
               </Pressable>
-            )}
-            {ble.running && (
-              <Pressable onPress={onPressStop} style={styles.button}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                    <FormattedMessage id="stop" />
-                  </Text>
-                  <Ionicons name="stop-outline" size={22} color="white" />
+              {!ble.running && (
+                <Pressable onPress={onPressStart} style={styles.button}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      <FormattedMessage id="start" />
+                    </Text>
+                    <Ionicons name="play-outline" size={22} color="white" />
+                  </View>
+                </Pressable>
+              )}
+              {ble.running && (
+                <Pressable onPress={onPressStop} style={styles.button}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      <FormattedMessage id="stop" />
+                    </Text>
+                    <Ionicons name="stop-outline" size={22} color="white" />
+                  </View>
+                </Pressable>
+              )}
+            </>
+          )}
+          {!ble.connected && (
+            <>
+              {!connecting && (
+                <Pressable onPress={onPressConnect} style={styles.button}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      <FormattedMessage id="connect" />
+                    </Text>
+                  </View>
+                </Pressable>
+              )}
+              {connecting && (
+                <View style={styles.button}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      <FormattedMessage id="connecting" />
+                    </Text>
+                    <ActivityIndicator size="small" color="white" />
+                  </View>
                 </View>
-              </Pressable>
-            )}
-          </>
-        )}
-        {!ble.connected && (
-          <>
-            {!connecting && (
-              <Pressable onPress={onPressConnect} style={styles.button}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                    <FormattedMessage id="connect" />
-                  </Text>
-                </View>
-              </Pressable>
-            )}
-            {connecting && (
-              <View style={styles.button}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.text}>
-                    <FormattedMessage id="connecting" />
-                  </Text>
-                  <ActivityIndicator size="small" color="white" />
-                </View>
-              </View>
-            )}
-          </>
-        )}
+              )}
+            </>
+          )}
+        </View>
       </View>
     </ImageBackground>
   )
@@ -104,26 +108,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-    width: 305,
     height: 250,
     marginBottom: 225,
     justifyContent: "center",
   },
   button: {
-    padding: 20,
-    margin: 20,
+    width: 300,
     borderRadius: 10,
+    marginTop: 20,
     backgroundColor: "#6B7B67",
   },
   settingsButton: {
-    padding: 20,
-    margin: 20,
+    width: 300,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "white",
     borderStyle: "solid",
   },
   textContainer: {
+    padding: 20,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
