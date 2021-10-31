@@ -8,5 +8,8 @@
       }
     },
     "production": {}
+  },
+  "submit": {
+    "production": {}
   }
 }
