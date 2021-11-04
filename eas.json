@@ -7,12 +7,16 @@
         "distribution": "internal"
       }
     },
-    "production": {}
+    "production": {},
+    "cache": {
+      "key": "08e5713c-26d2-49e1-9dc7-7ecf7352fc04"
+    }
   },
   "submit": {
     "production": {}
   },
-  "cache": {
-    "key": "08e5713c-26d2-49e1-9dc7-7ecf7352fc04"
+  "cli": {
+    "version": ">= 0.34.1",
+    "requireCommit": true
   }
 }
