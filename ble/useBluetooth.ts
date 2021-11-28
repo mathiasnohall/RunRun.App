@@ -22,20 +22,20 @@ export type BluetoothProps = {
   connected: boolean
 }
 
-var manager: BleManager = new BleManager()
+var manager: BleManager | null = new BleManager()
 
 export const useBluetooth = (): BluetoothProps => {
   const { device, connected, running, setConnected: setConnected, setRunning: setRunning, setDevice } = useContext(BleContext)
 
   const sendUART = async (data: string) => {
     if (device) {
-      await manager.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
+      await manager?.writeCharacteristicWithResponseForDevice(device.id, UARTServiceUUID, UARTTX, encode(data), uuidv4())
     }
   }
 
   const connect = () => {
     console.log("start connecting")
-    manager.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
+    manager?.startDeviceScan(null, { allowDuplicates: false }, async (error, device) => handleDeviceScan(error, device))
   }
 
   const getDeviceInformation = async (device: Device) => {
@@ -44,7 +44,7 @@ export const useBluetooth = (): BluetoothProps => {
 
     const isConnected = await connectedDevice.isConnected()
     console.log("connected " + isConnected)
-    const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
+    //const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
   }
 
   const handleDeviceScan = async (error: BleError | null, device: Device | null) => {
@@ -54,7 +54,7 @@ export const useBluetooth = (): BluetoothProps => {
     }
     if (device != null && device.localName === DEVICE_NAME) {
       console.log("found " + device?.localName)
-      manager.stopDeviceScan()
+      manager?.stopDeviceScan()
 
       device.onDisconnected(() => {
         console.log("disconneced")

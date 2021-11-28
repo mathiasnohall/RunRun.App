@@ -32,8 +32,8 @@ export default function Home() {
 
   return (
     <ImageBackground source={require("./../assets/background.png")} style={styles.container}>
-      <View>
-        <View>
+      <View style={styles.screen}>
+        <View style={styles.header}>
           <Image source={require("./../assets/logo.png")} style={styles.logo} />
         </View>
         <View>
@@ -107,19 +107,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  logo: {
+  screen: {
+    display:"flex",
+    flexDirection: "column",
+    flex: 1,
+    justifyContent: 'space-around'
+  },
+  header: {
+    display:"flex",
     height: 250,
-    marginBottom: 225,
+  },
+  logo: {
+    resizeMode: "cover",
+    height: 250,
+    width: 300,
     justifyContent: "center",
   },
   button: {
-    width: 300,
     borderRadius: 10,
     marginTop: 20,
     backgroundColor: "#6B7B67",
   },
   settingsButton: {
-    width: 300,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "white",
