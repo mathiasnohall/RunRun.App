@@ -43,8 +43,8 @@ export const useBluetooth = (): BluetoothProps => {
     setDevice(device)
 
     const isConnected = await connectedDevice.isConnected()
+    const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
     console.log("connected " + isConnected)
-    //const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics()
   }
 
   const handleDeviceScan = async (error: BleError | null, device: Device | null) => {
