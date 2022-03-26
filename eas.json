@@ -11,5 +11,9 @@
   },
   "submit": {
     "production": {}
+  },
+  "cli": {
+    "version": ">= 0.34.1",
+    "requireCommit": true
   }
 }
