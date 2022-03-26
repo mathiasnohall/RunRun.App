@@ -9,6 +9,7 @@ const UARTTX = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
 const UARTRX = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 
 const DEVICE_NAME: string = "Adafruit Bluefruit LE"
+const DEVICE_NAME_ESP: string = "RunRun"
 
 export type BluetoothProps = {
   start: () => Promise<void>
@@ -52,7 +53,7 @@ export const useBluetooth = (): BluetoothProps => {
       console.log(error)
       return
     }
-    if (device != null && device.localName === DEVICE_NAME) {
+    if (device != null && (device.localName === DEVICE_NAME || device.localName === DEVICE_NAME_ESP)) {
       console.log("found " + device?.localName)
       manager?.stopDeviceScan()
 
@@ -73,7 +74,7 @@ export const useBluetooth = (): BluetoothProps => {
   const changeDistance = async (distance: number) => {
     await sendUART("distance:" + distance)
   }
-  
+
   const changeWait = async (wait: number) => {
     await sendUART("wait:" + wait)
   }

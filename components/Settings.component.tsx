@@ -1,6 +1,6 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native"
 import { FontAwesome } from "@expo/vector-icons"
 import "react-native-get-random-values"
 import { useNavigation } from "@react-navigation/native"
@@ -12,23 +12,30 @@ import SettingsContext from "../context/settingsContext"
 export default function Settings() {
   const { device, changeSpeed, changeDistance, changeWait } = useBluetooth()
   const { speed, setSpeed, distance, setDistance, wait, setWait } = useContext(SettingsContext)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleSpeedChange = async (speed: number) => {
     console.log("speed: " + speed)
+    setLoading(!loading)
     await changeSpeed(speed)
     setSpeed(speed)
+    setLoading(!loading)
   }
 
   const handleDistanceChange = async (distance: number) => {
     console.log("distance:" + distance)
+    setLoading(!loading)
     await changeDistance(distance)
     setDistance(distance)
+    setLoading(!loading)
   }
 
   const handleWaitChange = async (wait: number) => {
     console.log("wait:" + wait)
+    setLoading(!loading)
     await changeWait(wait)
     setWait(wait)
+    setLoading(!loading)
   }
 
   const navigation = useNavigation()
@@ -39,19 +46,20 @@ export default function Settings() {
       </Pressable>
       <Text style={styles.text}>
         <FormattedMessage id="speed" />
+        {loading && <ActivityIndicator size="small" color="white" />}
       </Text>
       <View style={styles.speedContainer}>
-        <Pressable onPress={() => handleSpeedChange(150)} style={speed == 150 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleSpeedChange(150)} style={speed == 150 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="speedSlow" />
           </Text>
         </Pressable>
-        <Pressable onPress={() => handleSpeedChange(200)} style={speed == 200 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleSpeedChange(200)} style={speed == 200 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="speedMedium" />
           </Text>
         </Pressable>
-        <Pressable onPress={() => handleSpeedChange(255)} style={speed == 255 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleSpeedChange(255)} style={speed == 255 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="speedFast" />
           </Text>
@@ -59,19 +67,20 @@ export default function Settings() {
       </View>
       <Text style={styles.text}>
         <FormattedMessage id="distance" />
+        {loading && <ActivityIndicator size="small" color="white" />}
       </Text>
       <View style={styles.distanceContainer}>
-        <Pressable onPress={() => handleDistanceChange(70)} style={distance == 70 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleDistanceChange(70)} style={distance == 70 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="distanceShort" />
           </Text>
         </Pressable>
-        <Pressable onPress={() => handleDistanceChange(110)} style={distance == 110 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleDistanceChange(110)} style={distance == 110 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="distanceMedium" />
           </Text>
         </Pressable>
-        <Pressable onPress={() => handleDistanceChange(210)} style={distance == 210 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleDistanceChange(210)} style={distance == 210 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="distanceLong" />
           </Text>
@@ -80,19 +89,20 @@ export default function Settings() {
 
       <Text style={styles.text}>
         <FormattedMessage id="wait" />
+        {loading && <ActivityIndicator size="small" color="white" />}
       </Text>
       <View style={styles.distanceContainer}>
-        <Pressable onPress={() => handleWaitChange(1000)} style={wait == 1000 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleWaitChange(1000)} style={wait == 1000 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="waitShort" />
           </Text>
         </Pressable>
-        <Pressable onPress={() => handleWaitChange(5000)} style={wait == 5000 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleWaitChange(5000)} style={wait == 5000 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="waitMedium" />
           </Text>
         </Pressable>
-        <Pressable onPress={() => handleWaitChange(10000)} style={wait == 10000 ? styles.selectedButton : styles.button}>
+        <Pressable disabled={loading} onPress={() => handleWaitChange(10000)} style={wait == 10000 ? styles.selectedButton : styles.button}>
           <Text style={styles.text}>
             <FormattedMessage id="waitLong" />
           </Text>
