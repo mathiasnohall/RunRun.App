@@ -22,12 +22,12 @@ export default function Home() {
     }
   }, [ble.connected])
 
-  const onPressStart = () => {
-    ble.start()
+  const onPressStart = async () => {
+    await ble.start()
   }
 
-  const onPressStop = () => {
-    ble.stop()
+  const onPressStop = async () => {
+    await ble.stop()
   }
 
   return (

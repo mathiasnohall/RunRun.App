@@ -15,27 +15,24 @@ export default function Settings() {
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleSpeedChange = async (speed: number) => {
-    console.log("speed: " + speed)
-    setLoading(!loading)
+    setLoading(true)
     await changeSpeed(speed)
     setSpeed(speed)
-    setLoading(!loading)
+    setLoading(false)
   }
 
   const handleDistanceChange = async (distance: number) => {
-    console.log("distance:" + distance)
-    setLoading(!loading)
+    setLoading(true)
     await changeDistance(distance)
     setDistance(distance)
-    setLoading(!loading)
+    setLoading(false)
   }
 
   const handleWaitChange = async (wait: number) => {
-    console.log("wait:" + wait)
-    setLoading(!loading)
+    setLoading(true)
     await changeWait(wait)
     setWait(wait)
-    setLoading(!loading)
+    setLoading(false)
   }
 
   const navigation = useNavigation()
