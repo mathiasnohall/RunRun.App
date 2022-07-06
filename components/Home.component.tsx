@@ -39,7 +39,7 @@ export default function Home() {
         <View>
           {ble.connected && (
             <>
-              <Pressable onPress={() => navigation.navigate(Routes.Settings as never)} style={styles.settingsButton}>
+              <Pressable onPress={() => navigation.navigate(Routes.Settings as never)} style={styles.settingsButton} disabled={ble.running}>
                 <View style={styles.textContainer}>
                   <Text style={styles.text}>
                     <FormattedMessage id="settings" />
@@ -48,7 +48,7 @@ export default function Home() {
                 </View>
               </Pressable>
               {!ble.running && (
-                <Pressable onPress={onPressStart} style={styles.button}>
+                <Pressable onPress={onPressStart} style={styles.button} >
                   <View style={styles.textContainer}>
                     <Text style={styles.text}>
                       <FormattedMessage id="start" />
